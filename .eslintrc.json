@@ -12,5 +12,9 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "no-console": "off",
+        "linebreak-style": "off",
+        "no-underscore-dangle" : "off",
+        "no-undef": "off"
     }
 }
