@@ -56,7 +56,7 @@ describe('ThreadRepositoryPostgres', () => {
         .rejects.toThrow(NotFoundError);
     });
 
-    it('should not throw error when is given id is found', async () => {
+    it('should not throw error when a thread with given id is found', async () => {
       await UsersTableTestHelper.addUser({
         id: 'user-123',
         password: 'secret',

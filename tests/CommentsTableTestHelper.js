@@ -6,20 +6,21 @@ const CommentsTableTestHelper = {
     id = 'comment-123', content = 'This is a comment', owner = 'user-123',
   }) {
     const query = {
-      text: 'INSERT INTO comments VALUES($1, $2, $3, $4, $5)',
-      values: [id, content, threadId, owner, date],
+      text: 'INSERT INTO comments VALUES($1, $2, $3, $4)',
+      values: [id, content, threadId, owner],
     };
 
     await pool.query(query);
   },
 
-  async deleteComment(threadId, commentId, { content = '**komentar telah dihapus**' }) {
+  async findCommentById(commentId) {
     const query = {
-      text: 'UPDATE comments SET content = $1 WHERE id = $2 AND thread_id = $3',
-      values: [content, commentId, threadId],
+      text: 'SELECT * FROM comments WHERE id = $1',
+      values: [commentId],
     };
 
-    await pool.query(query);
+    const result = await pool.query(query);
+    return result.rows;
   },
 
   async cleanTable() {
