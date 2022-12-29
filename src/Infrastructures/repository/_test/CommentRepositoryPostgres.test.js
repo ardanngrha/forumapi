@@ -3,6 +3,7 @@ const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
 const AddComment = require('../../../Domains/comments/entities/AddComment');
 const AddedComment = require('../../../Domains/comments/entities/AddedComment');
+const CommentDetails = require('../../../Domains/comments/entities/CommentDetails');
 const pool = require('../../database/postgres/pool');
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres');
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
@@ -194,6 +195,38 @@ describe('CommentRepositoryPostgres', () => {
       // Assert
       const comments = await CommentsTableTestHelper.findCommentById(commentId);
       expect(comments[0].is_delete).toBeTruthy();
+    });
+  });
+
+  describe('getThreadComments function', () => {
+    it('should return thread comments correctly', async () => {
+      // Arrange
+      const threadId = 'thread-123';
+
+      await UsersTableTestHelper.addUser({
+        id: 'user-123',
+        username: 'adanngrha',
+        password: 'secret',
+        fullname: 'Adan Nugraha',
+      });
+
+      await ThreadsTableTestHelper.addThread({
+        id: 'thread-123',
+        title: 'This is a title',
+        body: 'This is a body',
+        owner: 'user-123',
+      });
+
+      await CommentsTableTestHelper.addComment('thread-123', {
+        id: 'comment-123',
+        content: 'This is a comment',
+        owner: 'user-123',
+        date: '2021',
+      });
+
+      const fakeIdGenerator = () => '123'; // stub!
+      const commentRepository = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
     });
   });
 });

@@ -1,16 +1,17 @@
-const ViewCommentDetails = require('../ViewCommentDetails');
+const CommentDetails = require('../CommentDetails');
 
-describe('a ViewCommentDetails entities', () => {
+describe('a CommentDetails entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     // Arrange
     const payload = {
       id: 'thread-123',
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
+      content: 'This is a comment',
     };
 
     // Action and Assert
-    expect(() => new ViewCommentDetails(payload)).toThrowError('VIEW_COMMENT_DETAILS.NOT_CONTAIN_NEEDED_PROPERTY');
+    expect(() => new CommentDetails(payload)).toThrowError('COMMENT_DETAILS.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
   it('should throw error when payload did not meet data type specification', () => {
@@ -20,28 +21,31 @@ describe('a ViewCommentDetails entities', () => {
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
       content: {},
+      isDelete: true,
     };
 
     // Action and Assert
-    expect(() => new ViewCommentDetails(payload)).toThrowError('VIEW_COMMENT_DETAILS.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    expect(() => new CommentDetails(payload)).toThrowError('COMMENT_DETAILS.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
-  it('should create viewCommentDetails object correctly', () => {
+  it('should create commentDetails object correctly', () => {
     // Arrange
     const payload = {
       id: 'thread-123',
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
       content: 'This is a comment',
+      isDelete: false,
     };
 
     // Action
-    const comment = new ViewCommentDetails(payload);
+    const comment = new CommentDetails(payload);
 
     // Assert
     expect(comment.id).toEqual(payload.id);
     expect(comment.username).toEqual(payload.username);
     expect(comment.date).toEqual(payload.date);
     expect(comment.content).toEqual(payload.content);
+    expect(comment.isDelete).toEqual(payload.isDelete);
   });
 });

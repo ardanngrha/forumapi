@@ -18,11 +18,16 @@ class ViewThreadDetails {
     id, title, body, date, username, comments,
   }) {
     if (!id || !title || !body || !date || !username || !comments) {
-      throw new Error('VIEW_THREAD_DETAILS.NOT_CONTAIN_NEEDED_PROPERTY');
+      throw new Error('THREAD_DETAILS.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof id !== 'string' || typeof title !== 'string' || typeof body !== 'string' || typeof date !== 'string' || typeof username !== 'string' || typeof comments !== 'object') {
-      throw new Error('VIEW_THREAD_DETAILS.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    if (typeof id !== 'string'
+    || typeof title !== 'string'
+    || typeof body !== 'string'
+    || typeof date !== 'string'
+    || typeof username !== 'string'
+    || !Array.isArray(comments)) {
+      throw new Error('THREAD_DETAILS.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
 }

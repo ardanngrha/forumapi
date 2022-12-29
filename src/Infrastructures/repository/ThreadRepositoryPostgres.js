@@ -39,6 +39,10 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       throw new NotFoundError('Thread tidak ditemukan!');
     }
   }
+
+  async getThreadById(threadId) {
+    
+  }
 }
 
 module.exports = ThreadRepositoryPostgres;
