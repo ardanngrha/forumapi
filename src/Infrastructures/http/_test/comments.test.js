@@ -258,7 +258,7 @@ describe('/comments endpoint', () => {
       const { data: { addedUser: { id } } } = JSON.parse(registeredUser.payload);
 
       await ThreadsTableTestHelper.addThread({ owner: id });
-      await CommentsTableTestHelper.addComment(threadId = 'thread-123', { owner: id });
+      await CommentsTableTestHelper.addComment({ owner: id, threadId: 'thread-123' });
 
       // Action
       const response = await server.inject({
@@ -309,7 +309,7 @@ describe('/comments endpoint', () => {
       const { data: { addedUser: { id } } } = JSON.parse(registeredUser.payload);
 
       await ThreadsTableTestHelper.addThread({ owner: id });
-      await CommentsTableTestHelper.addComment('thread-123', { owner: id });
+      await CommentsTableTestHelper.addComment({ owner: id, threadId: 'thread-123' });
 
       await server.inject({
         method: 'POST',

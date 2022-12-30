@@ -1,5 +1,4 @@
-const ThreadDetails = require('../../Domains/threads/entities/ThreadDetails');
-
+/* eslint-disable no-param-reassign */
 class GetThreadDetailsUseCase {
   constructor({ threadRepository, commentRepository }) {
     this._threadRepository = threadRepository;
@@ -11,19 +10,16 @@ class GetThreadDetailsUseCase {
     const thread = await this._threadRepository.getThreadById(threadId);
     const threadComments = await this._commentRepository.getThreadComments(threadId);
 
-    threadComments.forEach((part, index, commentArrays) => {
-      if (part.isDelete) {
-        commentArrays[index].content = '**komentar telah dihapus**';
+    threadComments.forEach((comment) => {
+      if (comment.is_delete === true) {
+        comment.content = '**komentar telah dihapus**';
       }
-      delete commentArrays[index].isDelete;
+      delete comment.is_delete;
     });
 
-    const threadDetails = new ThreadDetails({
-      ...thread,
-      comments: threadComments,
-    });
+    thread.comments = threadComments;
 
-    return threadDetails;
+    return thread;
   }
 }
 

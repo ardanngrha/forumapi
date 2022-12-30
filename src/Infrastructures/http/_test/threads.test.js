@@ -4,6 +4,7 @@ const AuthenticationsTableTestHelper = require('../../../../tests/Authentication
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
 const container = require('../../container');
 const createServer = require('../createServer');
+const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
 
 describe('/threads endpoint', () => {
   afterAll(async () => {
@@ -14,6 +15,7 @@ describe('/threads endpoint', () => {
     await UsersTableTestHelper.cleanTable();
     await AuthenticationsTableTestHelper.cleanTable();
     await ThreadsTableTestHelper.cleanTable();
+    await CommentsTableTestHelper.cleanTable();
   });
 
   describe('when POST /threads', () => {
@@ -178,6 +180,44 @@ describe('/threads endpoint', () => {
       expect(response.statusCode).toEqual(400);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena tipe data tidak sesuai');
+    });
+  });
+
+  describe('when GET /threads/{threadId}', () => {
+    it('should response 200 and return thread details and deleted comments correctly', async () => {
+      // Arrange
+      const server = await createServer(container);
+
+      const registeredUser = await server.inject({
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'adanngrha',
+          password: 'secret',
+          fullname: 'Adan Nugraha',
+        },
+      });
+
+      const { data: { addedUser: { id } } } = JSON.parse(registeredUser.payload);
+
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: id });
+      await CommentsTableTestHelper.addComment({ owner: id, threadId: 'thread-123' });
+      await CommentsTableTestHelper.addComment({ id: 'comment-222', owner: id, threadId: 'thread-123' });
+      await CommentsTableTestHelper.deleteCommentById('comment-222');
+
+      // Action
+      const response = await server.inject({
+        method: 'GET',
+        url: '/threads/thread-123',
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+      expect(responseJson.data.thread).toBeDefined();
+      expect(responseJson.data.thread.comments[0]).toBeDefined();
+      expect(responseJson.data.thread.comments[1].content).toEqual('**komentar telah dihapus**');
     });
   });
 });
