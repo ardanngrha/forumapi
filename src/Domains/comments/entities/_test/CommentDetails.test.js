@@ -7,7 +7,6 @@ describe('a CommentDetails entities', () => {
       id: 'thread-123',
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
-      content: 'This is a comment',
     };
 
     // Action and Assert
@@ -21,7 +20,7 @@ describe('a CommentDetails entities', () => {
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
       content: {},
-      isDelete: true,
+      is_delete: 234,
     };
 
     // Action and Assert
@@ -35,7 +34,6 @@ describe('a CommentDetails entities', () => {
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
       content: 'This is a comment',
-      isDelete: false,
     };
 
     // Action
@@ -46,6 +44,5 @@ describe('a CommentDetails entities', () => {
     expect(comment.username).toEqual(payload.username);
     expect(comment.date).toEqual(payload.date);
     expect(comment.content).toEqual(payload.content);
-    expect(comment.isDelete).toEqual(payload.isDelete);
   });
 });

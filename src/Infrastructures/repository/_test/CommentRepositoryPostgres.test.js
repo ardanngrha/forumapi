@@ -3,7 +3,6 @@ const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
 const AddComment = require('../../../Domains/comments/entities/AddComment');
 const AddedComment = require('../../../Domains/comments/entities/AddedComment');
-const CommentDetails = require('../../../Domains/comments/entities/CommentDetails');
 const pool = require('../../database/postgres/pool');
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres');
 const InvariantError = require('../../../Commons/exceptions/InvariantError');
@@ -201,32 +200,24 @@ describe('CommentRepositoryPostgres', () => {
   describe('getThreadComments function', () => {
     it('should return thread comments correctly', async () => {
       // Arrange
-      const threadId = 'thread-123';
 
-      await UsersTableTestHelper.addUser({
-        id: 'user-123',
-        username: 'adanngrha',
-        password: 'secret',
-        fullname: 'Adan Nugraha',
-      });
-
-      await ThreadsTableTestHelper.addThread({
-        id: 'thread-123',
-        title: 'This is a title',
-        body: 'This is a body',
-        owner: 'user-123',
-      });
-
-      await CommentsTableTestHelper.addComment('thread-123', {
-        id: 'comment-123',
-        content: 'This is a comment',
-        owner: 'user-123',
-        date: '2021',
-      });
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadsTableTestHelper.addThread({ owner: 'user-123' });
+      await CommentsTableTestHelper.addComment('thread-123', { id: 'comment-123' });
 
       const fakeIdGenerator = () => '123'; // stub!
       const commentRepository = new CommentRepositoryPostgres(pool, fakeIdGenerator);
 
+      // Action
+      const commentDetails = await commentRepository.getThreadComments('thread-123');
+
+      // Assert
+      expect(commentDetails).toHaveLength(1);
+      expect(commentDetails[0]).toHaveProperty('id', 'comment-123');
+      expect(commentDetails[0]).toHaveProperty('content', 'This is a comment');
+      expect(commentDetails[0]).toHaveProperty('username', 'adanngrha');
+      expect(commentDetails[0]).toHaveProperty('date');
+      expect(commentDetails[0]).toHaveProperty('is_delete');
     });
   });
 });

@@ -36,7 +36,7 @@ describe('a ThreadDetails entities', () => {
       id: 'thread-123',
       title: 'This is a title',
       body: 'This is a body',
-      date: '2021-08-08T07:19:09.775Z',
+      date: new Date().toISOString(),
       username: 'user-123',
       comments: [],
     };
