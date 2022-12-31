@@ -27,7 +27,7 @@ exports.up = (pgm) => {
       type: 'boolean',
       notNull: true,
       default: false,
-    }
+    },
   });
 
   pgm.addConstraint('replies', 'fk_replies.comment_id_comments.id', 'FOREIGN KEY(comment_id) REFERENCES comments(id) ON DELETE CASCADE');

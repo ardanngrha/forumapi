@@ -1,7 +1,7 @@
 class AddReply {
   constructor(owner, commentId, payload) {
     this._verifyOwner(owner);
-    this._verifyCommentId(commentId);
+    this._verifyComment(commentId);
     this._verifyPayload(payload);
 
     const { content } = payload;
@@ -21,7 +21,7 @@ class AddReply {
     }
   }
 
-  _verifyCommentId(commentId) {
+  _verifyComment(commentId) {
     if (!commentId) {
       throw new Error('ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }

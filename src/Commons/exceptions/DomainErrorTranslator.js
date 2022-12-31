@@ -23,8 +23,8 @@ DomainErrorTranslator._directories = {
   'ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menambahkan komentar baru karena properti yang dibutuhkan tidak ada'),
   'THREAD_DETAILS.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menampilkan detail thread karena properti yang di butuhkan tidak ada'),
   'THREAD_DETAILS.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menampilkan detail thread karena tipe data tidak sesuai'),
-  // 'COMMENT_DETAILS.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menampilkan detail comment karena properti yang di butuhkan tidak ada'),
-  // 'COMMENT_DETAILS.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menampilkan detail comment karena tipe data tidak sesuai'),
+  'ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menambahkan balasan baru karena tipe data tidak sesuai'),
+  'ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menambahkan balasan baru karena properti yang dibutuhkan tidak ada'),
 };
 
 module.exports = DomainErrorTranslator;

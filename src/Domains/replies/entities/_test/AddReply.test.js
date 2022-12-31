@@ -23,7 +23,7 @@ describe('a AddReply entities', () => {
     expect(() => new AddReply(owner, commentId, payload)).toThrowError('ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
-  it('should throw error when commentId is invalid', () => {
+  it('should throw error when comment is invalid', () => {
     const owner = 'user-123';
     const commentId = '';
     const payload = {
@@ -78,7 +78,9 @@ describe('a AddReply entities', () => {
     };
 
     // Action
-    const { owner, commentId, content } = new AddReply(expectedOwner, expectedCommentId, payload);
+    const {
+      owner, commentId, content,
+    } = new AddReply(expectedOwner, expectedCommentId, payload);
 
     // Assert
     expect(owner).toEqual(expectedOwner);
