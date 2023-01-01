@@ -37,7 +37,6 @@ describe('DeleteReplyUseCase', () => {
       .resolves.not.toThrowError();
     expect(mockCommentRepository.isCommentExist).toBeCalledWith(useCaseCommentId);
     expect(mockReplyRepository.verifyReplyOwner).toBeCalledWith(useCaseOwner, useCaseReplyId);
-    expect(mockReplyRepository.deleteReply)
-      .toBeCalledWith(useCaseCommentId, useCaseReplyId, useCaseOwner);
+    expect(mockReplyRepository.deleteReply).toBeCalledWith(useCaseReplyId);
   });
 });

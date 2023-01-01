@@ -26,12 +26,13 @@ describe('ReplyRepositoryPostgres', () => {
     it('should return added reply correctly', async () => {
       // Arrange
       const owner = 'user-123';
+      const threadId = 'thread-123';
 
       await UsersTableTestHelper.addUser({ id: owner });
       await ThreadsTableTestHelper.addThread({ owner });
-      await CommentsTableTestHelper.addComment({ threadId: 'thread-123', owner });
+      await CommentsTableTestHelper.addComment({ threadId, owner });
 
-      const reply = new AddReply(owner, 'comment-123', {
+      const reply = new AddReply(owner, threadId, 'comment-123', {
         content: 'This is a reply',
       });
 
@@ -123,11 +124,36 @@ describe('ReplyRepositoryPostgres', () => {
       const replyRepository = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      await replyRepository.deleteReply(replyId, commentId, owner);
+      await replyRepository.deleteReply(replyId);
 
       // Assert
       const reply = await RepliesTableTestHelper.findReplyById(replyId);
       expect(reply[0].is_delete).toBeTruthy();
+    });
+  });
+
+  describe('getThreadReplies function', () => {
+    it('should return comment replies correctly', async () => {
+      // Arrange
+
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadsTableTestHelper.addThread({ owner: 'user-123' });
+      await CommentsTableTestHelper.addComment({});
+      await RepliesTableTestHelper.addReply({});
+
+      const fakeIdGenerator = () => '123'; // stub!
+      const replyRepository = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
+
+      // Action
+      const replyDetails = await replyRepository.getThreadReplies('thread-123');
+
+      // Assert
+      expect(replyDetails).toHaveLength(1);
+      expect(replyDetails[0]).toHaveProperty('id', 'reply-123');
+      expect(replyDetails[0]).toHaveProperty('content', 'This is a reply');
+      expect(replyDetails[0]).toHaveProperty('username', 'adanngrha');
+      expect(replyDetails[0]).toHaveProperty('date');
+      expect(replyDetails[0]).toHaveProperty('is_delete');
     });
   });
 });

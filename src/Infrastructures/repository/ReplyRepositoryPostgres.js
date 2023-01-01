@@ -12,13 +12,13 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
   async addReply(reply) {
     const {
-      owner, commentId, content,
+      owner, threadId, commentId, content,
     } = reply;
     const id = `reply-${this._idGenerator()}`;
 
     const query = {
-      text: 'INSERT INTO replies VALUES($1, $2, $3, $4) RETURNING id, content, owner',
-      values: [id, content, commentId, owner],
+      text: 'INSERT INTO replies VALUES($1, $2, $3, $4, $5) RETURNING id, content, owner',
+      values: [id, content, threadId, commentId, owner],
     };
 
     const result = await this._pool.query(query);
@@ -46,29 +46,28 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
   }
 
-  async deleteReply(replyId, commentId, owner) {
+  async deleteReply(replyId) {
     const query = {
-      text: `UPDATE replies SET is_delete = true
-      WHERE id = $1 AND comment_id = $2 AND owner = $3`,
-      values: [replyId, commentId, owner],
+      text: 'UPDATE replies SET is_delete = true WHERE id = $1',
+      values: [replyId],
     };
 
     await this._pool.query(query);
   }
 
-  // async getThreadReplies(commentId) {
-  //   const query = {
-  //     text: `SELECT replies.id, users.username, replies.date, replies.content, replies.is_delete
-  //           FROM replies
-  //           JOIN users ON replies.owner = users.id
-  //           WHERE replies.comment_id = $1
-  //           ORDER BY replies.date ASC`,
-  //     values: [commentId],
-  //   };
+  async getThreadReplies(threadId) {
+    const query = {
+      text: `SELECT replies.id, users.username, replies.date, replies.content, replies.comment_id, replies.is_delete
+            FROM replies
+            JOIN users ON replies.owner = users.id
+            WHERE replies.thread_id = $1
+            ORDER BY replies.date ASC`,
+      values: [threadId],
+    };
 
-  //   const result = await this._pool.query(query);
-  //   return result.rows;
-  // }
+    const result = await this._pool.query(query);
+    return result.rows;
+  }
 }
 
 module.exports = ReplyRepositoryPostgres;

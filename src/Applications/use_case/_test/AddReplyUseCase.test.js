@@ -61,7 +61,7 @@ describe('AddReplyUseCase', () => {
     expect(mockThreadRepository.isThreadExist).toBeCalledWith(useCaseThreadId);
     expect(mockCommentRepository.isCommentExist).toBeCalledWith(useCaseCommentId);
     expect(mockReplyRepository.addReply)
-      .toBeCalledWith(new AddReply(useCaseOwner, useCaseCommentId, {
+      .toBeCalledWith(new AddReply(useCaseOwner, useCaseThreadId, useCaseCommentId, {
         content: useCasePayload.content,
       }));
   });

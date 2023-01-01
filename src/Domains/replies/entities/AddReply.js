@@ -1,12 +1,13 @@
 class AddReply {
-  constructor(owner, commentId, payload) {
+  constructor(owner, threadId, commentId, payload) {
     this._verifyOwner(owner);
-    this._verifyComment(commentId);
+    this._verifyThreadAndComment(threadId, commentId);
     this._verifyPayload(payload);
 
     const { content } = payload;
 
     this.owner = owner;
+    this.threadId = threadId;
     this.commentId = commentId;
     this.content = content;
   }
@@ -21,12 +22,12 @@ class AddReply {
     }
   }
 
-  _verifyComment(commentId) {
-    if (!commentId) {
+  _verifyThreadAndComment(threadId, commentId) {
+    if (!threadId || !commentId) {
       throw new Error('ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof commentId !== 'string') {
+    if (typeof threadId !== 'string' || typeof commentId !== 'string') {
       throw new Error('ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }

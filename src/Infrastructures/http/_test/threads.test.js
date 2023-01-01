@@ -5,6 +5,7 @@ const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper
 const container = require('../../container');
 const createServer = require('../createServer');
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
+const RepliesTableTestHelper = require('../../../../tests/RepliesTableTestHelper');
 
 describe('/threads endpoint', () => {
   afterAll(async () => {
@@ -204,6 +205,9 @@ describe('/threads endpoint', () => {
       await CommentsTableTestHelper.addComment({ owner: id, threadId: 'thread-123' });
       await CommentsTableTestHelper.addComment({ id: 'comment-222', owner: id, threadId: 'thread-123' });
       await CommentsTableTestHelper.deleteCommentById('comment-222');
+      await RepliesTableTestHelper.addReply({ owner: id, commentId: 'comment-123' });
+      await RepliesTableTestHelper.addReply({ id: 'reply-222', owner: id, commentId: 'comment-123' });
+      await RepliesTableTestHelper.deleteReplyById('reply-222');
 
       // Action
       const response = await server.inject({
@@ -218,6 +222,8 @@ describe('/threads endpoint', () => {
       expect(responseJson.data.thread).toBeDefined();
       expect(responseJson.data.thread.comments[0]).toBeDefined();
       expect(responseJson.data.thread.comments[1].content).toEqual('**komentar telah dihapus**');
+      expect(responseJson.data.thread.comments[0].replies[0]).toBeDefined();
+      expect(responseJson.data.thread.comments[0].replies[1].content).toEqual('**balasan telah dihapus**');
     });
   });
 });
