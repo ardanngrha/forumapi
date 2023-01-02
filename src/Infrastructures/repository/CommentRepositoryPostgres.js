@@ -21,11 +21,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query);
 
-    return new AddedComment({
-      id: result.rows[0].id,
-      content: result.rows[0].content,
-      owner: result.rows[0].owner,
-    });
+    return new AddedComment({ ...result.rows[0] });
   }
 
   async verifyCommentOwner(owner, commentId) {

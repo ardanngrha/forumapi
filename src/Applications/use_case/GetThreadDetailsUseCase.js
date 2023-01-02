@@ -19,16 +19,12 @@ class GetThreadDetailsUseCase {
       delete comment.is_delete;
     });
 
-    console.debug(threadReplies);
-
     threadReplies.forEach((reply) => {
       if (reply.is_delete === true) {
         reply.content = '**balasan telah dihapus**';
       }
       delete reply.is_delete;
     });
-
-    console.debug(threadReplies);
 
     const commentRepliesById = threadComments.map((data) => {
       const replies = threadReplies.filter((reply) => reply.comment_id === data.id)
@@ -49,7 +45,6 @@ class GetThreadDetailsUseCase {
     });
 
     thread.comments = commentRepliesById;
-    console.debug(thread.comments[0].replies);
     return thread;
   }
 }

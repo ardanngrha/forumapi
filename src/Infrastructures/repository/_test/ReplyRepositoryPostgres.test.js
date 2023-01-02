@@ -23,6 +23,30 @@ describe('ReplyRepositoryPostgres', () => {
   });
 
   describe('addReply function', () => {
+    it('should persist add reply and return added reply correctly', async () => {
+      // Arrange
+      const owner = 'user-123';
+      const threadId = 'thread-123';
+
+      await UsersTableTestHelper.addUser({ id: owner });
+      await ThreadsTableTestHelper.addThread({ owner });
+      await CommentsTableTestHelper.addComment({ threadId, owner });
+
+      const reply = new AddReply(owner, threadId, 'comment-123', {
+        content: 'This is a reply',
+      });
+
+      const fakeIdGenerator = () => '123'; // stub!
+      const replyRepository = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
+
+      // Action
+      await replyRepository.addReply(reply);
+
+      // Assert
+      const replies = await RepliesTableTestHelper.findReplyById('reply-123');
+      expect(replies).toHaveLength(1);
+    });
+
     it('should return added reply correctly', async () => {
       // Arrange
       const owner = 'user-123';

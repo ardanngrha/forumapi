@@ -13,14 +13,13 @@ const ThreadsTableTestHelper = {
     await pool.query(query);
   },
 
-  async getThreadById(id = 'thread-123') {
+  async findThreadById(threadId) {
     const query = {
       text: 'SELECT * FROM threads WHERE id = $1',
-      values: [id],
+      values: [threadId],
     };
 
     const result = await pool.query(query);
-
     return result.rows;
   },
 

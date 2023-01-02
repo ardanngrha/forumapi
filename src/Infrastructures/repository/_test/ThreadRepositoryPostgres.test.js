@@ -17,16 +17,31 @@ describe('ThreadRepositoryPostgres', () => {
   });
 
   describe('addThread function', () => {
-    it('should return added thread correctly', async () => {
+    it('should persist add thread and return registered user correctly', async () => {
       // Arrange
-      await UsersTableTestHelper.addUser({
-        id: 'user-123',
-        username: 'adanngrha',
-        password: 'secret',
-        fullname: 'Adan Nugraha',
+      const addThread = new AddThread('user-123', {
+        title: 'This is a title',
+        body: 'This is a body',
       });
 
-      const thread = new AddThread('user-123', {
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+
+      const fakeIdGenerator = () => '123'; // stub!
+      const threadRepository = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
+
+      // Action
+      await threadRepository.addThread(addThread);
+
+      // Assert
+      const threads = await ThreadsTableTestHelper.findThreadById('thread-123');
+      expect(threads).toHaveLength(1);
+    });
+
+    it('should return added thread correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+
+      const addThread = new AddThread('user-123', {
         title: 'This is a title',
         body: 'This is a body',
       });
@@ -35,7 +50,7 @@ describe('ThreadRepositoryPostgres', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      const addedThread = await threadRepositoryPostgres.addThread(thread);
+      const addedThread = await threadRepositoryPostgres.addThread(addThread);
 
       // Assert
       expect(addedThread).toStrictEqual(new AddedThread({
@@ -57,12 +72,7 @@ describe('ThreadRepositoryPostgres', () => {
     });
 
     it('should not throw error when a thread with given id is found', async () => {
-      await UsersTableTestHelper.addUser({
-        id: 'user-123',
-        password: 'secret',
-        fullname: 'Adan Nugraha',
-        username: 'adanngrha',
-      });
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
 
       const addThread = new AddThread('user-123', { title: 'This is a title', body: 'This is a body' });
 
