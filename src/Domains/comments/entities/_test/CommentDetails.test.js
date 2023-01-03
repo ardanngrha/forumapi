@@ -7,6 +7,7 @@ describe('a CommentDetails entities', () => {
       id: 'thread-123',
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
+      replies: [],
     };
 
     // Action and Assert
@@ -19,8 +20,8 @@ describe('a CommentDetails entities', () => {
       id: 123,
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
+      replies: [],
       content: {},
-      is_delete: 234,
     };
 
     // Action and Assert
@@ -33,6 +34,7 @@ describe('a CommentDetails entities', () => {
       id: 'thread-123',
       username: 'user-123',
       date: '2021-08-08T07:22:33.555Z',
+      replies: [],
       content: 'This is a comment',
     };
 

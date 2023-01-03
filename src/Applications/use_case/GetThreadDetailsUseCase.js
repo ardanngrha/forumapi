@@ -1,4 +1,8 @@
 /* eslint-disable no-param-reassign */
+const ThreadDetails = require('../../Domains/threads/entities/ThreadDetails');
+const CommentDetails = require('../../Domains/comments/entities/CommentDetails');
+const ReplyDetails = require('../../Domains/replies/entities/ReplyDetails');
+
 class GetThreadDetailsUseCase {
   constructor({ threadRepository, commentRepository, replyRepository }) {
     this._threadRepository = threadRepository;
@@ -26,26 +30,25 @@ class GetThreadDetailsUseCase {
       delete reply.is_delete;
     });
 
-    const commentRepliesById = threadComments.map((data) => {
+    const commentsRepliesById = threadComments.map((data) => {
       const replies = threadReplies.filter((reply) => reply.comment_id === data.id)
-        .map((reply) => ({
+        .map((reply) => (new ReplyDetails({
           id: reply.id,
           content: reply.content,
           date: reply.date,
           username: reply.username,
-        }));
+        })));
 
-      return {
-        id: data.id,
-        username: data.username,
-        date: data.date,
+      return new CommentDetails({
+        ...data,
         replies,
-        content: data.content,
-      };
+      });
     });
 
-    thread.comments = commentRepliesById;
-    return thread;
+    return new ThreadDetails({
+      ...thread,
+      comments: commentsRepliesById,
+    });
   }
 }
 

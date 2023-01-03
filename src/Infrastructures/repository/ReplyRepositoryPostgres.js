@@ -15,10 +15,10 @@ class ReplyRepositoryPostgres extends ReplyRepository {
       owner, threadId, commentId, content,
     } = reply;
     const id = `reply-${this._idGenerator()}`;
-
+    const date = new Date().toISOString();
     const query = {
-      text: 'INSERT INTO replies VALUES($1, $2, $3, $4, $5) RETURNING id, content, owner',
-      values: [id, content, threadId, commentId, owner],
+      text: 'INSERT INTO replies VALUES($1, $2, $3, $4, $5, $6) RETURNING id, content, owner',
+      values: [id, content, threadId, commentId, owner, date],
     };
 
     const result = await this._pool.query(query);
@@ -61,7 +61,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
             FROM replies
             JOIN users ON replies.owner = users.id
             WHERE replies.thread_id = $1
-            ORDER BY replies.date ASC`,
+            ORDER BY replies.date`,
       values: [threadId],
     };
 

@@ -5,7 +5,6 @@ const AddComment = require('../../../Domains/comments/entities/AddComment');
 const AddedComment = require('../../../Domains/comments/entities/AddedComment');
 const pool = require('../../database/postgres/pool');
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres');
-const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError');
 
@@ -96,7 +95,7 @@ describe('CommentRepositoryPostgres', () => {
 
       // Action & Assert
       await expect(commentRepository.verifyCommentOwner(owner, commentId))
-        .resolves.not.toThrow(InvariantError);
+        .resolves.not.toThrow(AuthorizationError);
     });
 
     it('should throw authorization error when owner and commentId did not matched', async () => {
@@ -182,7 +181,7 @@ describe('CommentRepositoryPostgres', () => {
       const commentRepository = new CommentRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      await commentRepository.deleteComment(threadId, commentId, owner);
+      await commentRepository.deleteComment(commentId);
 
       // Assert
       const comment = await CommentsTableTestHelper.findCommentById(commentId);
@@ -216,10 +215,10 @@ describe('CommentRepositoryPostgres', () => {
   describe('getThreadComments function', () => {
     it('should return thread comments correctly', async () => {
       // Arrange
-
+      const date = new Date().toISOString();
       await UsersTableTestHelper.addUser({ id: 'user-123' });
       await ThreadsTableTestHelper.addThread({ owner: 'user-123' });
-      await CommentsTableTestHelper.addComment('thread-123', { id: 'comment-123' });
+      await CommentsTableTestHelper.addComment({ id: 'comment-123', date });
 
       const fakeIdGenerator = () => '123'; // stub!
       const commentRepository = new CommentRepositoryPostgres(pool, fakeIdGenerator);
@@ -232,7 +231,7 @@ describe('CommentRepositoryPostgres', () => {
       expect(commentDetails[0]).toHaveProperty('id', 'comment-123');
       expect(commentDetails[0]).toHaveProperty('content', 'This is a comment');
       expect(commentDetails[0]).toHaveProperty('username', 'adanngrha');
-      expect(commentDetails[0]).toHaveProperty('date');
+      expect(commentDetails[0]).toHaveProperty('date', date);
       expect(commentDetails[0]).toHaveProperty('is_delete');
     });
   });

@@ -1,4 +1,4 @@
-class ViewThreadDetails {
+class ThreadDetails {
   constructor(payload) {
     this._verifyPayload(payload);
 
@@ -32,4 +32,4 @@ class ViewThreadDetails {
   }
 }
 
-module.exports = ViewThreadDetails;
+module.exports = ThreadDetails;

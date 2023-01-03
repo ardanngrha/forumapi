@@ -159,11 +159,11 @@ describe('ReplyRepositoryPostgres', () => {
   describe('getThreadReplies function', () => {
     it('should return comment replies correctly', async () => {
       // Arrange
-
+      const date = new Date().toISOString();
       await UsersTableTestHelper.addUser({ id: 'user-123' });
       await ThreadsTableTestHelper.addThread({ owner: 'user-123' });
-      await CommentsTableTestHelper.addComment({});
-      await RepliesTableTestHelper.addReply({});
+      await CommentsTableTestHelper.addComment({ id: 'comment-123' });
+      await RepliesTableTestHelper.addReply({ id: 'reply-123', threadId: 'thread-123', date });
 
       const fakeIdGenerator = () => '123'; // stub!
       const replyRepository = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
@@ -176,7 +176,7 @@ describe('ReplyRepositoryPostgres', () => {
       expect(replyDetails[0]).toHaveProperty('id', 'reply-123');
       expect(replyDetails[0]).toHaveProperty('content', 'This is a reply');
       expect(replyDetails[0]).toHaveProperty('username', 'adanngrha');
-      expect(replyDetails[0]).toHaveProperty('date');
+      expect(replyDetails[0]).toHaveProperty('date', date);
       expect(replyDetails[0]).toHaveProperty('is_delete');
     });
   });

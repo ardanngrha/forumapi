@@ -221,8 +221,10 @@ describe('/threads endpoint', () => {
       expect(responseJson.status).toEqual('success');
       expect(responseJson.data.thread).toBeDefined();
       expect(responseJson.data.thread.comments[0]).toBeDefined();
+      expect(responseJson.data.thread.comments[1]).toBeDefined();
       expect(responseJson.data.thread.comments[1].content).toEqual('**komentar telah dihapus**');
       expect(responseJson.data.thread.comments[0].replies[0]).toBeDefined();
+      expect(responseJson.data.thread.comments[0].replies[1]).toBeDefined();
       expect(responseJson.data.thread.comments[0].replies[1].content).toEqual('**balasan telah dihapus**');
     });
   });
