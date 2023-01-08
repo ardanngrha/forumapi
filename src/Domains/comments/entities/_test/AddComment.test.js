@@ -33,7 +33,7 @@ describe('a AddComment entities', () => {
     expect(() => new AddComment(owner, threadId, payload)).toThrowError('ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
-  it('should throw error when thread did not meet data type specification', () => {
+  it('should throw error when threadId did not meet data type specification', () => {
     // Arrange
     const owner = 'user-123';
     const threadId = 123;

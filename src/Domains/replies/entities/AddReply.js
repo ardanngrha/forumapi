@@ -1,8 +1,6 @@
 class AddReply {
   constructor(owner, threadId, commentId, payload) {
-    this._verifyOwner(owner);
-    this._verifyThreadAndComment(threadId, commentId);
-    this._verifyPayload(payload);
+    this._verifyParamsAndPayload(owner, threadId, commentId, payload);
 
     const { content } = payload;
 
@@ -12,32 +10,12 @@ class AddReply {
     this.content = content;
   }
 
-  _verifyOwner(owner) {
-    if (!owner) {
+  _verifyParamsAndPayload(owner, threadId, commentId, { content }) {
+    if (!owner || !threadId || !commentId || !content) {
       throw new Error('ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof owner !== 'string') {
-      throw new Error('ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
-    }
-  }
-
-  _verifyThreadAndComment(threadId, commentId) {
-    if (!threadId || !commentId) {
-      throw new Error('ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
-    }
-
-    if (typeof threadId !== 'string' || typeof commentId !== 'string') {
-      throw new Error('ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
-    }
-  }
-
-  _verifyPayload({ content }) {
-    if (!content) {
-      throw new Error('ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
-    }
-
-    if (typeof content !== 'string') {
+    if (typeof owner !== 'string' || typeof threadId !== 'string' || typeof commentId !== 'string' || typeof content !== 'string') {
       throw new Error('ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
